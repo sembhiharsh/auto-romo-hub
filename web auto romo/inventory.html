@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Inventory - Romo Auto Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff;
+    color: #222;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  a:hover,
+  a:focus {
+    color: #ff6600;
+    outline: none;
+  }
+
+  /* Sticky Header */
+  header {
+    position: sticky;
+    top: 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    z-index: 1000;
+  }
+  nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+  }
+  .logo a {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #ff6600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Nav Links */
+  ul.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+  ul.nav-links li a {
+    font-weight: 500;
+    font-size: 1rem;
+    position: relative;
+    padding: 0.25rem 0;
+    transition: color 0.3s ease;
+    color: #222;
+  }
+  ul.nav-links li a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #ff6600;
+    transition: width 0.3s ease;
+  }
+  ul.nav-links li a:hover::after,
+  ul.nav-links li a:focus::after {
+    width: 100%;
+  }
+  ul.nav-links li a:hover,
+  ul.nav-links li a:focus {
+    color: #ff6600;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 28px;
+    height: 22px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+  }
+  .hamburger:focus {
+    outline: 2px solid #ff6600;
+    outline-offset: 2px;
+  }
+  .hamburger span {
+    width: 100%;
+    height: 3px;
+    background: #ff6600;
+    border-radius: 3px;
+    transition: all 0.4s ease;
+    transform-origin: 1px;
+  }
+  .hamburger.active span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+
+  /* Responsive Nav */
+  @media (max-width: 768px) {
+    ul.nav-links {
+      position: fixed;
+      top: 70px;
+      right: 0;
+      height: calc(100vh - 70px);
+      background-color: #ffffff;
+      flex-direction: column;
+      width: 220px;
+      padding-top: 2rem;
+      gap: 1.5rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-in-out;
+      box-shadow: -4px 0 8px rgba(255, 102, 0, 0.3);
+    }
+    ul.nav-links.active {
+      transform: translateX(0);
+    }
+    ul.nav-links li a {
+      font-size: 1.2rem;
+      padding: 0.5rem 1.5rem;
+      color: #222;
+    }
+    .hamburger {
+      display: flex;
+    }
+  }
+
+  /* Hero Section */
+  .hero {
+    position: relative;
+    height: 60vh;
+    background: url('images/hero-bg.jpg') center center/cover no-repeat;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+    color: #222;
+    padding-top: 4rem;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    padding: 0 1rem;
+  }
+  .hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  .hero-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    color: #222ccccc;
+  }
+  .hero-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background-color: #ff6600;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 1rem;
+    box-shadow: 0 4px 10px rgba(255, 102, 0, 0.5);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn:hover,
+  .btn:focus {
+    background-color: #e65c00;
+    color: #fff;
+    outline: none;
+  }
+
+  /* Main content */
+  main {
+    max-width: 1200px;
+    margin: 3rem auto 2rem;
+    padding: 0 1rem;
+    flex-grow: 1;
+  }
+  main section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #222;
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  /* Filter Bar */
+  .filter-bar {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .filter-bar select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #222;
+    background-color: #fff;
+    cursor: pointer;
+    min-width: 150px;
+    transition: border-color 0.3s ease;
+  }
+  .filter-bar select:focus {
+    border-color: #ff6600;
+    outline: none;
+  }
+
+  /* Card grid */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 2rem;
+  }
+  .card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1rem 1.5rem 2rem;
+  }
+  .card:hover,
+  .card:focus-within {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(255, 102, 0, 0.25);
+  }
+  .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid #ff6600;
+  }
+  .card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+    color: #ff6600;
+  }
+  .card-price {
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+    color: #333333;
+  }
+  .card-button {
+    background-color: #ff6600;
+    border: none;
+    color: #ffffff;
+    padding: 0.65rem 1.5rem;
+    border-radius: 30px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    align-self: flex-start;
+    font-size: 1rem;
+    box-shadow: 0 4px 8px rgba(255, 102, 0, 0.4);
+  }
+  .card-button:hover,
+  .card-button:focus {
+    background-color: #e65c00;
+    color: #fff;
+    outline: none;
+  }
+
+  /* Footer */
+  footer {
+    background-color: #2b2b2b;
+    color: #cccccc;
+    padding: 3rem 2rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+  .footer-container {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .footer-column {
+    flex: 1 1 220px;
+    min-width: 220px;
+  }
+  .footer-column h3 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    letter-spacing: 1.5px;
+    color: #cccccc;
+  }
+  .footer-column p,
+  .footer-column a {
+    color: #cccccc;
+    text-decoration: none;
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: color 0.3s ease;
+    font-weight: 400;
+  }
+  .footer-column a:hover,
+  .footer-column a:focus {
+    color: #ff6600;
+    outline: none;
+  }
+  .footer-column p {
+    line-height: 1.5;
+  }
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #cccccc;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .social-icons a svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+  .social-icons a:hover,
+  .social-icons a:focus {
+    color: #ff6600;
+    background-color: rgba(255, 102, 0, 0.15);
+    outline: none;
+  }
+  .footer-separator {
+    border-top: 1px solid #444444;
+    margin: 1.5rem 0 1.5rem 0;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .footer-copy {
+    text-align: center;
+    color: #999999;
+    font-size: 0.85rem;
+    font-weight: 400;
+  }
+
+  /* Responsive Footer */
+  @media (max-width: 600px) {
+    .footer-container {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .footer-column {
+      min-width: auto;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 1.5rem;
+    }
+    .social-icons {
+      justify-content: center;
+    }
+  }
+
+  /* Responsive text sizes */
+  @media (max-width: 480px) {
+    .hero-content h1 {
+      font-size: 2.5rem;
+    }
+    .hero-content p {
+      font-size: 1rem;
+    }
+    main section h2 {
+      font-size: 2rem;
+    }
+    .card img {
+      height: 160px;
+    }
+    .card-title {
+      font-size: 1.2rem;
+    }
+    .card-price {
+      font-size: 1rem;
+    }
+    .card-button {
+      font-size: 0.9rem;
+      padding: 0.5rem 1.25rem;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <div class="logo">
+      <a href="index.html" aria-label="Romo Auto Hub Home">Romo Auto Hub</a>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="inventory.html" aria-current="page">Inventoria</a></li>
+      <li><a href="contact.html">Contacto</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menú" aria-expanded="false" aria-controls="nav-links">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+</header>
+
+<section class="hero" role="banner" aria-label="Welcome to Romo Auto Hub">
+  <div class="hero-content">
+    <h1>Discover Your Dream Car</h1>
+    <p>Quality vehicles, unbeatable prices, and exceptional service all in one place.</p>
+    <div class="hero-buttons">
+      <a href="index.html" class="btn" role="button">Home</a>
+      <a href="contact.html" class="btn" role="button">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+<div class="filter-bar" aria-label="Filter Inventory">
+  <select name="make" id="filter-make" aria-label="Filter by Make">
+    <option value="">Make</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Ford">Ford</option>
+    <option value="BMW">BMW</option>
+    <option value="Audi">Audi</option>
+  </select>
+  <select name="price" id="filter-price" aria-label="Filter by Price">
+    <option value="">Price</option>
+    <option value="0-10000">$0 - $10,000</option>
+    <option value="10001-20000">$10,001 - $20,000</option>
+    <option value="20001-30000">$20,001 - $30,000</option>
+    <option value="30001+">$30,001+</option>
+  </select>
+  <select name="year" id="filter-year" aria-label="Filter by Year">
+    <option value="">Year</option>
+    <option value="2024">2024</option>
+    <option value="2023">2023</option>
+    <option value="2022">2022</option>
+    <option value="2021">2021</option>
+    <option value="2020">2020</option>
+  </select>
+</div>
+
+<main>
+  <section aria-label="Car Inventory">
+    <h2>Inventoria - Romo Auto Hub</h2>
+    <div id="car-cards" class="card-grid" tabindex="0"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-container">
+    <div class="footer-column" aria-label="About and Contact Information">
+      <h3>Contacto</h3>
+      <p>Romo Auto Hub</p>
+      <p>1234 Avenida Principal, Ciudad, País</p>
+      <p>Tel: <a href="tel:+1234567890">+1 234 567 890</a></p>
+      <p>Email: <a href="mailto:info@romoautohub.com">info@romoautohub.com</a></p>
+    </div>
+    <div class="footer-column" aria-label="Quick Links">
+      <h3>Enlaces Rápidos</h3>
+      <a href="index.html">Inicio</a>
+      <a href="inventory.html">Inventoria</a>
+      <a href="contact.html">Contacto</a>
+    </div>
+    <div class="footer-column" aria-label="Social Media">
+      <h3>Síguenos</h3>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook" target="_blank" rel="noopener noreferrer" tabindex="0">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M22.675 0h-21.35C.6 0 0 .6 0 1.337v21.326C0 23.4.6 24 1.325 24h11.495v-9.294H9.691v-3.622h3.129V8.413c0-3.1 1.894-4.788 4.659-4.788 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116c.725 0 1.325-.6 1.325-1.337V1.337C24 .6 23.4 0 22.675 0z"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Twitter" target="_blank" rel="noopener noreferrer" tabindex="0">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M23.954 4.569c-.885.392-1.83.656-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.949.564-2.005.974-3.127 1.195-.897-.959-2.178-1.559-3.594-1.559-2.723 0-4.928 2.204-4.928 4.928 0 .39.045.765.127 1.124-4.093-.205-7.725-2.165-10.157-5.144-.424.726-.666 1.571-.666 2.475 0 1.708.87 3.216 2.188 4.099-.807-.026-1.566-.247-2.229-.616v.061c0 2.385 1.693 4.374 3.946 4.828-.413.111-.849.171-1.296.171-.317 0-.626-.03-.927-.086.627 1.956 2.444 3.379 4.6 3.419-1.68 1.318-3.808 2.105-6.115 2.105-.398 0-.79-.023-1.175-.069 2.179 1.397 4.768 2.213 7.557 2.213 9.054 0 14-7.496 14-13.986 0-.21 0-.423-.015-.633.962-.695 1.8-1.562 2.46-2.549z"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Instagram" target="_blank" rel="noopener noreferrer" tabindex="0">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm4.75-.75a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-separator" role="presentation"></div>
+  <p class="footer-copy">&copy; 2024 Romo Auto Hub. Todos los derechos reservados.</p>
+</footer>
+
+<script src="scripts/main.js"></script>
+<script>
+  renderInventory();
+</script>
+<script>
+  // Hamburger menu toggle with aria-expanded update
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('nav-links');
+  hamburger.addEventListener('click', () => {
+    const expanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
+    hamburger.setAttribute('aria-expanded', !expanded);
+    navLinks.classList.toggle('active');
+    hamburger.classList.toggle('active');
+  });
+</script>
+</body>
+</html>

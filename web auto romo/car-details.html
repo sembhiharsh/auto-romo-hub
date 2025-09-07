@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Car Details - Romo Auto  </title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    /* Header Styles */
+    header.site-header {
+      background-color: #fff;
+      color: #000;
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 1.75rem;
+      font-weight: bold;
+      color: #ff6600;
+      text-decoration: none;
+    }
+    nav.main-nav {
+      display: flex;
+      gap: 20px;
+    }
+    nav.main-nav a {
+      color: #000;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 0;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    nav.main-nav a:hover,
+    nav.main-nav a:focus {
+      border-bottom: 2px solid #ff6600;
+      outline: none;
+    }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+      width: 28px;
+      height: 22px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      z-index: 1100;
+    }
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: #000;
+      border-radius: 2px;
+      transition: all 0.3s linear;
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Hero Styles */
+    .hero {
+      position: relative;
+      background: #ff6600;
+      color: #fff;
+      padding: 100px 20px;
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,102,0,0.65);
+      z-index: 0;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .hero-content h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .hero-content p {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .hero-buttons {
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #ff6600;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 6px rgba(255,102,0,0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      font-weight: 600;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      cursor: pointer;
+      border: none;
+    }
+    .btn:hover,
+    .btn:focus {
+      background-color: #e65500;
+      box-shadow: 0 6px 8px rgba(230,85,0,0.6);
+      outline: none;
+    }
+
+    /* Main Car Details Container */
+    main {
+      max-width: 900px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+    .car-detail-section {
+      background-color: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12), 0 1.5px 3px rgba(0,0,0,0.04);
+      padding: 40px 48px;
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #222;
+      margin-top: 0;
+      margin-bottom: 0;
+      transition: box-shadow 0.3s;
+    }
+
+    /* Carousel Styles */
+    .car-detail-carousel {
+      position: relative;
+      flex: 1 1 480px;
+      max-width: 540px;
+      min-width: 320px;
+      min-height: 340px;
+      aspect-ratio: 4/3;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(255,102,0,0.08), 0 2px 8px rgba(0,0,0,0.08);
+      user-select: none;
+      touch-action: pan-y;
+      background: #f7f7f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      margin-bottom: 0;
+    }
+    .carousel-images {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(.77,.01,.41,1.01);
+      will-change: transform;
+      min-height: 320px;
+    }
+    .carousel-images img {
+      width: 100%;
+      flex-shrink: 0;
+      object-fit: cover;
+      border-radius: 0;
+      pointer-events: auto;
+      user-select: none;
+      min-height: 320px;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .carousel-images img:hover,
+    .carousel-images img:focus {
+      box-shadow: 0 4px 32px rgba(255,102,0,0.12);
+      transform: scale(1.02);
+      outline: none;
+    }
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255,102,0,0.92);
+      border: none;
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(255,102,0,0.13);
+      transition: background 0.2s, box-shadow 0.2s, transform 0.12s;
+      z-index: 10;
+      opacity: 0.93;
+    }
+    .carousel-button:hover,
+    .carousel-button:focus {
+      background: #ff6600;
+      box-shadow: 0 6px 18px rgba(255,102,0,0.20);
+      transform: scale(1.07);
+      outline: none;
+    }
+    .carousel-button.prev {
+      left: 18px;
+    }
+    .carousel-button.next {
+      right: 18px;
+    }
+    .carousel-button svg {
+      width: 22px;
+      height: 22px;
+      fill: white;
+    }
+    /* Carousel indicator dots */
+    .carousel-indicators {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 0 0;
+      padding: 0;
+      width: 100%;
+      z-index: 2;
+      position: relative;
+      min-height: 24px;
+      user-select: none;
+    }
+    .carousel-indicator-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #e0e0e0;
+      border: 2px solid transparent;
+      transition: background 0.24s, border 0.2s, transform 0.18s;
+      cursor: pointer;
+      display: inline-block;
+      margin: 0 2px;
+    }
+    .carousel-indicator-dot.active {
+      background: #ff6600;
+      border: 2px solid #ff6600;
+      transform: scale(1.18);
+    }
+    .carousel-indicator-dot:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #ffa366;
+      border-color: #ffa366;
+    }
+
+    /* Car Detail Info */
+    .car-detail-info {
+      flex: 1 1 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      min-width: 280px;
+      max-width: 520px;
+    }
+    .car-detail-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.15em;
+      color: #ff6600;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .car-detail-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #2a2a2a;
+      margin-bottom: 18px;
+      margin-top: 0;
+      letter-spacing: -0.2px;
+    }
+    .car-spec-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 38px;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 28px 0;
+      font-size: 1.09rem;
+      line-height: 1.7;
+      color: #4c4c4c;
+    }
+    @media (min-width: 900px) {
+      .car-spec-list {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    .car-spec-list li {
+      margin-bottom: 0;
+      break-inside: avoid;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5em;
+      padding: 2px 0;
+    }
+    .car-spec-list strong {
+      color: #151515;
+      font-weight: 600;
+      font-size: 1em;
+      margin-right: 0.1em;
+      min-width: 80px;
+      letter-spacing: 0.01em;
+    }
+    .car-detail-desc {
+      font-size: 1.12rem;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 22px;
+      margin-top: 0;
+      font-weight: 400;
+    }
+
+    /* Action Buttons below details */
+    .car-action-buttons {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+      width: 100%;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+    .car-action-buttons button {
+      flex: 1 1 50%;
+      background: linear-gradient(90deg, #ff6600 60%, #ff8c1a 100%);
+      color: #fff;
+      padding: 1rem 0;
+      font-size: 1.15rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 6px 16px rgba(255,102,0,0.15);
+      transition: background 0.2s, box-shadow 0.2s, transform 0.13s;
+      margin-bottom: 0;
+      letter-spacing: 0.02em;
+      min-width: 150px;
+      max-width: 300px;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .car-action-buttons button.test-drive-btn {
+      background: linear-gradient(90deg, #ffa366 40%, #ff6600 100%);
+      color: #fff;
+    }
+    .car-action-buttons button:hover,
+    .car-action-buttons button:focus {
+      background: linear-gradient(90deg, #e65500 60%, #ff6600 100%);
+      box-shadow: 0 10px 24px rgba(255,102,0,0.22);
+      transform: translateY(-2px) scale(1.03);
+      outline: none;
+    }
+    .car-action-buttons button.test-drive-btn:hover,
+    .car-action-buttons button.test-drive-btn:focus {
+      background: linear-gradient(90deg, #ff6600 50%, #ffa366 100%);
+    }
+
+    /* Footer Styles */
+    footer.site-footer {
+      background-color: #222;
+      color: #ccc;
+      padding: 40px 20px 20px;
+      font-size: 0.9rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: space-between;
+      border-top: 1px solid #444;
+      padding-top: 30px;
+    }
+    .footer-col {
+      flex: 1 1 200px;
+      min-width: 180px;
+    }
+    .footer-col h4 {
+      color: #ff6600;
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+    .footer-link {
+      color: #ff6600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+      font-weight: 500;
+    }
+    .footer-link svg {
+      fill: #ff6600;
+      width: 18px;
+      height: 18px;
+      transition: fill 0.3s ease;
+    }
+    .footer-link:hover,
+    .footer-link:focus {
+      color: #ffa366;
+      outline: none;
+    }
+    .footer-link:hover svg,
+    .footer-link:focus svg {
+      fill: #ffa366;
+    }
+    .footer-bottom {
+      text-align: center;
+      margin-top: 30px;
+      color: #555;
+      font-size: 0.85rem;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 900px) {
+      .car-detail-section {
+        flex-direction: column;
+        padding: 22px 10px;
+        gap: 30px;
+      }
+      .car-detail-carousel, .car-detail-info {
+        max-width: 100%;
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+      .car-detail-carousel {
+        min-height: 220px;
+        aspect-ratio: 4/3;
+      }
+      .car-spec-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .car-detail-title {
+        font-size: 1.7rem;
+      }
+      .car-detail-price {
+        font-size: 1.2rem;
+      }
+      .car-detail-desc {
+        font-size: 1rem;
+      }
+      .car-action-buttons {
+        flex-direction: column;
+        gap: 14px;
+        margin-top: 22px;
+      }
+      .car-action-buttons button {
+        max-width: 100%;
+        min-width: 0;
+        font-size: 1rem;
+        padding: 0.8rem 0;
+      }
+    }
+    @media (max-width: 768px) {
+      nav.main-nav {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background-color: #fff;
+        flex-direction: column;
+        width: 180px;
+        padding: 10px 0;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        display: none;
+      }
+      nav.main-nav.open {
+        display: flex;
+      }
+      nav.main-nav a {
+        padding: 10px 20px;
+        color: #000;
+        border-bottom: none;
+      }
+      nav.main-nav a:hover,
+      nav.main-nav a:focus {
+        border-bottom: none;
+        color: #ff6600;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .header-container {
+        justify-content: space-between;
+      }
+      .footer-container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .hero {
+        padding: 70px 15px;
+      }
+      .hero-content h1 {
+        font-size: 2.25rem;
+      }
+      .hero-content p {
+        font-size: 1rem;
+      }
+      .car-detail-section {
+        padding: 10px 2vw;
+        gap: 18px;
+      }
+      .car-detail-carousel {
+        min-height: 170px;
+        aspect-ratio: 4/3;
+      }
+      .car-spec-list {
+        grid-template-columns: 1fr;
+        font-size: 0.96rem;
+      }
+      .car-detail-title {
+        font-size: 1.3rem;
+      }
+      .car-detail-price {
+        font-size: 1rem;
+      }
+      .car-detail-desc {
+        font-size: 0.97rem;
+      }
+      .car-action-buttons button {
+        font-size: 0.97rem;
+        padding: 0.7rem 0;
+      }
+    }
+    @media (max-width: 600px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 30px;
+      }
+      .footer-col {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="logo" aria-label="Auto Romo Home">Auto Romo</a>
+      <nav id="mainNav" class="main-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="inventory.html">Inventory</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <button class="hamburger" aria-label="Open navigation" aria-expanded="false" aria-controls="mainNav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Car Details</h1>
+      <p>Explore features, specifications, and more about this vehicle.</p>
+      <div class="hero-buttons">
+        <a href="inventory.html" class="btn">View Inventory</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Car Details Section -->
+  <main>
+    <section id="car-detail" class="car-detail-section">
+      <div class="car-detail-carousel" aria-label="Car images carousel">
+        <div class="carousel-images" tabindex="0">
+          <!-- Images will be inserted here -->
+        </div>
+        <div class="carousel-indicators" aria-label="Carousel indicators" role="tablist"></div>
+        <button class="carousel-button prev" aria-label="Previous image">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="carousel-button next" aria-label="Next image">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+        </button>
+      </div>
+      <div class="car-detail-info">
+        <h2 class="car-detail-title"></h2>
+        <p class="car-detail-price" aria-label="Price"></p>
+        <ul class="car-spec-list"></ul>
+        <p class="car-detail-desc"></p>
+        <div class="car-action-buttons">
+          <button type="button" class="btn test-drive-btn">Test Drive</button>
+          <button type="button" class="btn buy-now-btn">Buy Now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-container">
+      <div class="footer-col about-footer">
+        <h4>About Auto Romo</h4>
+        <p>Your trusted partner for quality vehicles and excellent service.</p>
+      </div>
+      <div class="footer-col quick-links-footer">
+        <h4>Quick Links</h4>
+        <nav aria-label="Footer Quick Links">
+          <a href="index.html" class="footer-link">Home</a><br />
+          <a href="inventory.html" class="footer-link">Inventory</a><br />
+          <a href="contact.html" class="footer-link">Contact</a>
+        </nav>
+      </div>
+      <div class="footer-col social-footer">
+        <h4>Follow Us</h4>
+        <nav aria-label="Social Media">
+          <a href="#" aria-label="Facebook" class="footer-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M22.675 0h-21.35C.597 0 0 .597 0 1.333v21.334C0 23.403.597 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.658-4.788 1.325 0 2.466.099 2.797.143v3.24l-1.918.001c-1.504 0-1.796.715-1.796 1.763v2.313h3.59l-.467 3.622h-3.123V24h6.116c.728 0 1.325-.597 1.325-1.333V1.333C24 .597 23.403 0 22.675 0z"/>
+            </svg>
+            Facebook
+          </a><br />
+          <a href="#" aria-label="Twitter" class="footer-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M24 4.557a9.83 9.83 0 01-2.828.775 4.932 4.932 0 002.165-2.724c-.951.564-2.005.974-3.127 1.195a4.916 4.916 0 00-8.373 4.482A13.94 13.94 0 011.671 3.149a4.916 4.916 0 001.523 6.556 4.903 4.903 0 01-2.228-.616c-.054 2.281 1.581 4.415 3.949 4.89a4.935 4.935 0 01-2.224.084 4.918 4.918 0 004.588 3.417A9.867 9.867 0 010 19.54a13.94 13.94 0 007.548 2.209c9.142 0 14.307-7.721 13.995-14.646A9.936 9.936 0 0024 4.557z"/>
+            </svg>
+            Twitter
+          </a><br />
+          <a href="#" aria-label="Instagram" class="footer-link">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 2A3.75 3.75 0 004 7.75v8.5A3.75 3.75 0 007.75 20h8.5a3.75 3.75 0 003.75-3.75v-8.5A3.75 3.75 0 0016.25 4h-8.5zm8.5 1.5a1 1 0 110 2 1 1 0 010-2zM12 7a5 5 0 110 10 5 5 0 010-10zm0 2a3 3 0 100 6 3 3 0 000-6z"/>
+            </svg>
+            Instagram
+          </a>
+        </nav>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2024 Auto Romo. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- Hamburger Menu Script -->
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const nav = document.getElementById('mainNav');
+    hamburger.addEventListener('click', () => {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true' || false;
+      hamburger.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+    });
+  </script>
+
+  <!-- Include main.js for car data -->
+  <script type="module" src="scripts/main.js"></script>
+  <script type="module">
+    import { cars } from './scripts/main.js';
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function populateCarDetails(car) {
+      if (!car) {
+        document.querySelector('.car-detail-title').textContent = 'Car not found';
+        document.querySelector('.car-detail-price').textContent = '';
+        const carouselImages = document.querySelector('.carousel-images');
+        carouselImages.innerHTML = '';
+        document.querySelector('.car-spec-list').innerHTML = '';
+        document.querySelector('.car-detail-desc').textContent = '';
+        document.querySelector('.carousel-indicators').innerHTML = '';
+        return;
+      }
+      const titleEl = document.querySelector('.car-detail-title');
+      const priceEl = document.querySelector('.car-detail-price');
+      const carouselImages = document.querySelector('.carousel-images');
+      const specListEl = document.querySelector('.car-spec-list');
+      const descEl = document.querySelector('.car-detail-desc');
+      const indicatorsEl = document.querySelector('.carousel-indicators');
+
+      titleEl.textContent = car.name;
+      priceEl.textContent = car.price;
+
+      // Populate carousel images
+      carouselImages.innerHTML = '';
+      let numImages = 0;
+      if (car.images && car.images.length) {
+        car.images.forEach((imgObj, index) => {
+          const img = document.createElement('img');
+          if (typeof imgObj === 'string') {
+            img.src = imgObj;
+            img.alt = car.alt || car.name + ' image ' + (index + 1);
+          } else {
+            img.src = imgObj.src || '';
+            img.alt = imgObj.alt || car.alt || car.name + ' image ' + (index + 1);
+          }
+          carouselImages.appendChild(img);
+        });
+        numImages = car.images.length;
+      } else if (car.image) {
+        // fallback single image
+        const img = document.createElement('img');
+        img.src = car.image;
+        img.alt = car.alt || car.name;
+        carouselImages.appendChild(img);
+        numImages = 1;
+      }
+
+      // Populate carousel indicator dots
+      indicatorsEl.innerHTML = '';
+      for (let i = 0; i < numImages; ++i) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'carousel-indicator-dot';
+        dot.setAttribute('aria-label', `Go to image ${i + 1}`);
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('tabindex', '0');
+        indicatorsEl.appendChild(dot);
+      }
+      // Set first dot as active if exists
+      if (indicatorsEl.firstChild) {
+        indicatorsEl.firstChild.classList.add('active');
+      }
+
+      // Populate specifications
+      specListEl.innerHTML = '';
+      for (const [key, value] of Object.entries(car.specifications)) {
+        const li = document.createElement('li');
+        const strong = document.createElement('strong');
+        strong.textContent = key + ':';
+        li.appendChild(strong);
+        li.appendChild(document.createTextNode(' ' + value));
+        specListEl.appendChild(li);
+      }
+
+      descEl.textContent = car.description;
+    }
+
+    // Carousel functionality with indicators and enhanced navigation
+    function initCarousel() {
+      const carousel = document.querySelector('.car-detail-carousel');
+      const imagesContainer = carousel.querySelector('.carousel-images');
+      const images = imagesContainer.children;
+      const prevBtn = carousel.querySelector('.carousel-button.prev');
+      const nextBtn = carousel.querySelector('.carousel-button.next');
+      const indicators = carousel.querySelector('.carousel-indicators');
+      const dots = indicators ? Array.from(indicators.children) : [];
+
+      let currentIndex = 0;
+      const totalImages = images.length;
+
+      function updateCarousel(focusDot = false) {
+        const width = carousel.clientWidth;
+        imagesContainer.style.transform = `translateX(-${currentIndex * width}px)`;
+        // Update indicator dots
+        if (dots.length) {
+          dots.forEach((dot, idx) => {
+            if (idx === currentIndex) {
+              dot.classList.add('active');
+              if (focusDot) dot.focus();
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+        updateCarousel(true);
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % totalImages;
+        updateCarousel(true);
+      }
+
+      prevBtn.addEventListener('click', showPrev);
+      nextBtn.addEventListener('click', showNext);
+
+      // Indicator dots click
+      if (dots.length) {
+        dots.forEach((dot, idx) => {
+          dot.addEventListener('click', () => {
+            currentIndex = idx;
+            updateCarousel(true);
+          });
+          dot.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              currentIndex = idx;
+              updateCarousel(true);
+              e.preventDefault();
+            }
+          });
+        });
+      }
+
+      // Handle window resize to update transform
+      window.addEventListener('resize', updateCarousel);
+
+      // Touch/swipe support
+      let startX = 0;
+      let isDragging = false;
+      let moved = false;
+      imagesContainer.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        moved = false;
+      }, { passive: true });
+
+      imagesContainer.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const currentX = e.touches[0].clientX;
+        const diff = currentX - startX;
+        if (Math.abs(diff) > 10) {
+          e.preventDefault();
+          moved = true;
+        }
+      }, { passive: false });
+
+      imagesContainer.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+        if (diff > 40) {
+          // Swipe right
+          showPrev();
+        } else if (diff < -40) {
+          // Swipe left
+          showNext();
+        }
+        isDragging = false;
+      });
+
+      // Keyboard navigation for carousel
+      imagesContainer.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          showPrev();
+          e.preventDefault();
+        } else if (e.key === 'ArrowRight') {
+          showNext();
+          e.preventDefault();
+        }
+      });
+
+      // Arrow keys for indicators
+      if (dots.length) {
+        indicators.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') {
+            currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+            updateCarousel(true);
+            e.preventDefault();
+          } else if (e.key === 'ArrowRight') {
+            currentIndex = (currentIndex + 1) % totalImages;
+            updateCarousel(true);
+            e.preventDefault();
+          }
+        });
+      }
+
+      updateCarousel();
+    }
+
+    const carId = getQueryParam('id');
+    // Convert both carId and c.id to numbers for comparison
+    const car = cars.find(c => Number(c.id) === Number(carId));
+    populateCarDetails(car);
+    // Initialize carousel after images populated
+    window.addEventListener('load', () => {
+      initCarousel();
+    });
+  </script>
+</body>
+</html>
